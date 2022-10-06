@@ -2,6 +2,7 @@ import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from views import __init__
 from views.animal_requests import get_all_animals, get_single_animal
+from views.location_requests import get_all_locations, get_single_location
 
 
 # Here's a class. It inherits from another class.
@@ -55,11 +56,19 @@ class HandleRequests(BaseHTTPRequestHandler):
 
             else:
                 response = get_all_animals()
-
-        self.wfile.write(json.dumps(response).encode())
-        
     # Send a JSON formatted string as a response
         self.wfile.write(json.dumps(response).encode())
+        
+        (resource, id) = self.parse_url(self.path)
+        if resource == "locations":
+            if id is not None:
+                response = get_single_location(id)
+
+            else:
+                response = get_all_locations()
+        self.wfile.write(json.dumps(response).encode())
+
+        
 
     # Here's a method on the class that overrides the parent's method.
     # It handles any POST request.
