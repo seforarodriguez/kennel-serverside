@@ -4,5 +4,3 @@ class Customer():
         self.email = email
         self.name = name
     
-
-new_customer = Customer(1, "a@a.com", "Kasey Jones")
