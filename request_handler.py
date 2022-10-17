@@ -1,9 +1,9 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from views import get_all_animals, get_single_animal
-from views import create_location
+from views import get_all_locations, get_single_location
 from views.customer_requests import get_all_customers, get_single_customer
-from views.employee_requests import create_employee, delete_employee, get_all_employees, get_single_employee, update_employee
+from views.employee_requests import get_all_employees, get_single_employee
 
 
 # Here's a class. It inherits from another class.
