@@ -1,11 +1,12 @@
 import json
 from urllib.parse import urlparse, parse_qs
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from views import get_all_animals, get_single_animal, get_animals_by_location
+from views import get_all_animals, get_single_animal, get_animals_by_location, delete_animal
 from views import get_all_locations, get_single_location
 from views import get_all_customers,get_single_customer, get_customers_by_email
 from views import get_all_employees, get_employees_by_location, get_single_employee
 from views import get_animals_by_treatment
+from views.animal_requests import delete_animal
 
 
 # Here's a class. It inherits from another class.
