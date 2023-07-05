@@ -5,7 +5,7 @@ from views import get_all_animals, get_single_animal, get_animals_by_location, d
 from views import get_all_locations, get_single_location
 from views import get_all_customers,get_single_customer, get_customers_by_email
 from views import get_all_employees, get_employees_by_location, get_single_employee
-from views import get_animals_by_treatment
+from views import get_animals_by_treatment, update_animal, create_animal
 from views.animal_requests import delete_animal
 
 
@@ -56,24 +56,24 @@ class HandleRequests(BaseHTTPRequestHandler):
 
             if resource == "animals":
                 if id is not None:
-                    response = f"{get_single_animal(id)}"
+                    response = get_single_animal(id)
                 else:
-                    response = f"{get_all_animals()}"
+                    response = get_all_animals()
             elif resource == "customers":
                 if id is not None:
-                    response = f"{get_single_customer(id)}"
+                    response = get_single_customer(id)
                 else:
-                    response = f"{get_all_customers()}"
+                    response = get_all_customers()
             elif resource == "locations":
                 if id is not None:
-                    response = f"{get_single_location(id)}"
+                    response = get_single_location(id)
                 else:
-                    response = f"{get_all_locations()}"
+                    response = get_all_locations()
             elif resource == "employees":
                 if id is not None:
-                    response = f"{get_single_employee(id)}"
+                    response = get_single_employee(id)
                 else:
-                    response = f"{get_all_employees()}"
+                    response = get_all_employees()
 
         else: # There is a ? in the path, run the query param functions
             (resource, query) = parsed
@@ -156,7 +156,6 @@ class HandleRequests(BaseHTTPRequestHandler):
     # A method that handles any PUT request.
     def do_PUT(self):
         """Handles PUT requests to the server"""
-        self._set_headers(204)
         content_len = int(self.headers.get('content-length', 0))
         post_body = self.rfile.read(content_len)
         post_body = json.loads(post_body)
@@ -164,9 +163,11 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Parse the URL
         (resource, id) = self.parse_url(self.path)
 
+        success = False
+
         # UPDATE a single animal from the list
         if resource == "animals":
-            update_animal(id, post_body)
+            success = update_animal(id, post_body)
         if resource == "locations":
             update_location(id, post_body)
         if resource == "customers":
@@ -174,6 +175,11 @@ class HandleRequests(BaseHTTPRequestHandler):
         if resource == "employees":
             update_employee(id, post_body)
         # Encode the new animal and send in response
+        if success:
+            self._set_headers(204)
+        else:
+            self._set_headers(404)
+
         self.wfile.write("".encode())
 
     def _set_headers(self, status):
