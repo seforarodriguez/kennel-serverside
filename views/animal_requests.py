@@ -83,12 +83,15 @@ def get_single_animal(id):
         # Load the single result into memory
         data = db_cursor.fetchone()
 
-        # Create an animal instance from the current row
-        animal = Animal(data['id'], data['name'], data['breed'],
-                        data['status'], data['customer_id'], data['location_id'])
+        if data is None:
+            return None
+        else:
 
-        return animal.__dict__
+            # Create an animal instance from the current row
+            animal = Animal(data['id'], data['name'], data['breed'],
+                            data['status'], data['customer_id'], data['location_id'])
 
+    return animal.__dict__
 
 def get_animals_by_location(location):
 
@@ -146,8 +149,8 @@ def get_animals_by_treatment(status):
             animal = Animal(row['id'], row['name'], row['status'],
                             row['breed'], row['customer_id'], row['location_id'])
             animals.append(animal.__dict__)
-
     return animals
+  
 
 
 def delete_animal(id):
