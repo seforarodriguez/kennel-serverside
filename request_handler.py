@@ -2,7 +2,7 @@ import json
 from urllib.parse import urlparse, parse_qs
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from views import get_all_animals, get_single_animal, get_animals_by_location, delete_animal
-from views import get_all_locations, get_single_location
+from views import get_all_locations, get_single_location, create_location
 from views import get_all_customers,get_single_customer, get_customers_by_email
 from views import get_all_employees, get_employees_by_location, get_single_employee
 from views import get_animals_by_treatment, update_animal, create_animal
@@ -54,15 +54,15 @@ class HandleRequests(BaseHTTPRequestHandler):
             ( resource, id ) = parsed
 
             if resource == "animals":
-                if id is not None:
-                    response = get_single_animal(id)
-                    if response is not None:
+                    if id is not None:
                         response = get_single_animal(id)
+                        if response is not None:
+                            response = get_single_animal(id)
+                        else:
+                            self._set_headers(404)
+                            response = { "message": f"Animal {id} is out playing right now" }
                     else:
-                        self._set_headers(404)
-                        response = { "message": f"Animal {id} is out playing right now" }
-                else:
-                    response = get_all_animals()
+                        response = get_all_animals()
             elif resource == "customers":
                 if id is not None:
                     self._set_headers(200)

@@ -61,3 +61,27 @@ def get_single_location(id):
         location = Location(data['id'], data['name'], data['address'])
 
         return location.__dict__
+
+def create_location(new_location):
+    with sqlite3.connect("./kennel.sqlite3") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        INSERT INTO Location
+            ( name, address )
+        VALUES
+            ( ?, ?, ?, ?, ?);
+        """, (new_location['name'], new_location['address'],))
+
+        # The `lastrowid` property on the cursor will return
+        # the primary key of the last thing that got added to
+        # the database.
+        id = db_cursor.lastrowid
+
+        # Add the `id` property to the location dictionary that
+        # was sent by the client so that the client sees the
+        # primary key in the response.
+        new_location['id'] = id
+
+
+    return new_location
